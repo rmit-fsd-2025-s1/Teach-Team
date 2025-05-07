@@ -14,7 +14,7 @@ export class User {
     @Column()
     password: string
 
-    @Column()
+    @Column({type: "boolean", default: false})
     isLecturer: boolean
 
     @Column()

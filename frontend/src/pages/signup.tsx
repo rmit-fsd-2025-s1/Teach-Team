@@ -20,7 +20,6 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLecturer, setIsLecturer] = useState("false");
   const toast = useToast();
   const router = useRouter();
 
@@ -34,7 +33,7 @@ export default function Signup() {
         name,
         email,
         password,
-        isLecturer: "true",
+        isLecturer: false
     });
 
     toast({

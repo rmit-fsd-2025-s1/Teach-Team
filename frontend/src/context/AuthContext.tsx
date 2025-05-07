@@ -5,7 +5,7 @@ import { User } from "../types/User";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<User | null>;
   logout: () => Promise<void>;
 }
 
@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User | null> => {
     try {
       const { data } = await axios.post(
         "/api/auth/signin",
@@ -25,9 +25,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         { withCredentials: true }
       );
       setUser(data.user);
-      return true;
+      return data.user;
     } catch (err) {
-      return false;
+      return null;
     }
   };
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await axios.post("/api/auth/logout", {}, { withCredentials: true });
     setUser(null);
     router.push("/login");
-  };
+  };    
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

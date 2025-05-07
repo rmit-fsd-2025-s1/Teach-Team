@@ -24,9 +24,10 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const ok = await login(email, password);
-    if (ok) {
-      router.push("/" + (user?.isLecturer ? "lecturer" : "tutor"));
+    const loginUser = await login(email, password);
+    console.log(loginUser)
+    if (loginUser) {
+      router.push("/" + (loginUser?.isLecturer ? "lecturer" : "tutor"));
     } else {
       toast({
         title: "Invalid email or password",

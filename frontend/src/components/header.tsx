@@ -1,27 +1,34 @@
-import { Box, Flex, Text, Link } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Box, Flex, Text, Link, Button } from "@chakra-ui/react";
+import { useAuth } from "../context/AuthContext";
 
-interface HeaderProps {
-  children: ReactNode; 
-}
+export default function Header() {
+  const { user, logout } = useAuth();
 
-const Header = ({children}: HeaderProps) => {
   return (
-    <header className="header">
-      <Box>     
-        <Box bg="gray.700" color="white" py={4}>
-          <Flex justify="space-between" align="center" px={8}>
-            <Text fontSize="2xl" fontWeight="bold" color={"teal.300"}>
+    <Box bg="gray.700" color="white" py={4}>
+      <Flex justify="space-between" align="center" px={8}>
+      <Text fontSize="2xl" fontWeight="bold" color={"teal.300"}>
               <Link _hover={{ textDecoration: "none" }} href="/">
               TeachTeam
               </Link>
-            </Text>
-            {children}
-          </Flex>
-        </Box>
-      </Box>
-    </header>
-  );
-};
+        </Text>
 
-export default Header;
+        {user ? (
+          <Flex align="center">
+            <Text mr={4}>Welcome, {user.name}</Text>
+            <Button size="md" colorScheme="red" onClick={logout}>
+              Logout
+            </Button>
+          </Flex>
+        ) : (
+          <Flex>
+            <Link href="/login" mr={4}>
+              Log in
+            </Link>
+            <Link href="/signup">Sign up</Link>
+          </Flex>
+        )}
+      </Flex>
+    </Box>
+  );
+}

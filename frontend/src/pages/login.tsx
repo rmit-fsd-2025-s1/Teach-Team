@@ -18,54 +18,28 @@ import Header from "../components/header";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {login} = useAuth();
+  const {login, user} = useAuth();
   const router = useRouter();
   const toast = useToast();
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    const success = login(email, password);
-    if (success) {
-      let user = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")!) : null;
-      console.log(user)
-      if(user.isAdmin == false) {
-      router.push("/tutor");
+    const loginUser = await login(email, password);
+    console.log(loginUser)
+    if (loginUser) {
+      router.push("/" + (loginUser?.isLecturer ? "lecturer" : "tutor"));
+    } else {
       toast({
-        title: "Successfully logged in",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      } else if(user.isAdmin == true) {
-        router.push("/lecturer");
-        toast({
-          title: "Successfully logged in",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "User not found",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
-    } else {  
-      toast({
-        title: "Invalid Email or Password",
+        title: "Invalid email or password",
         status: "error",
-        duration: 5000,
-        isClosable: true,
+        duration: 3000,
       });
     }
   };
   
   return (
     <Box minHeight="100vh" display="flex" flexDirection="column">
-      <Header>{""}</Header>
+      <Header/>
 
       <Flex flex="1" justifyContent="center" alignItems="center" bg={"gray.800"}>
         <Box

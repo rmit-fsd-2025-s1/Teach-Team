@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TutorApplication } from '../types/application';
+import axios from 'axios';
 
 interface TutorApplicationContextType {
   applications: TutorApplication[];
   addApplication: (application: TutorApplication) => void;
-  updateApplication: (id: string, updatedApplication: Partial<TutorApplication>) => void;
+  updateApplication: (
+  id: string,
+  updates: Partial<TutorApplication>
+) => Promise<void>;
   getApplications: () => TutorApplication[];
   deleteApplication: (id: string) => void;
 }
@@ -15,41 +19,47 @@ export function TutorApplicationProvider({ children }: { children: React.ReactNo
   const [applications, setApplications] = useState<TutorApplication[]>([]);
 
   useEffect(() => {
-    // Load applications from localStorage on mount
-    const storedApplications = localStorage.getItem("tutorApplications");
-    if (storedApplications) {
-      setApplications(JSON.parse(storedApplications));
-    }
+    
+    (async () => {
+      try {
+        const {data} = await axios.get<TutorApplication[]>(
+          '/api/lecturer/applications',
+          {withCredentials: true}
+        );
+        setApplications(data);
+      } catch (error) {
+        console.log(error)
+      }
+    })()
   }, []);
 
-  const addApplication = (application: TutorApplication) => {
-    const updatedApplications = [...applications, application];
-    setApplications(updatedApplications);
-    localStorage.setItem("tutorApplications", JSON.stringify(updatedApplications));
-  };
+  const addApplication = async (application: TutorApplication): Promise<void> => {
+    await axios.post('/api/applications',
+      application,
+      {withCredentials: true}
+    );
+    setApplications((prev) => [...prev, application]);
+  }
 
-  const updateApplication = (id: string, updatedApplication: Partial<TutorApplication>) => {
-    console.log('Updating application:', id, 'with:', updatedApplication);
-    const updatedApplications = applications.map((app) => {
-      if (app.id === id) {
-        console.log('Found matching application, updating...');
-        return { ...app, ...updatedApplication };
-      }
-      return app;
-    });
-    console.log('Updated applications:', updatedApplications);
-    setApplications(updatedApplications);
-    localStorage.setItem("tutorApplications", JSON.stringify(updatedApplications));
-  };
+
+  const updateApplication = async (id: string, updatedApplication: Partial<TutorApplication>): Promise<void> => {
+    const {data: updated} = await axios.put<TutorApplication>(
+      `/api/applications/${id}`,
+      updatedApplication,
+      {withCredentials: true}
+    );
+    setApplications((prev) => 
+      prev.map((app) => (app.id == id ? updated : app))
+      );
+    };
 
   const getApplications = () => {
     return applications;
   };
 
-  const deleteApplication = (id: string) => {
-    const updatedApplications = applications.filter((app) => app.id !== id);
-    setApplications(updatedApplications);
-    localStorage.setItem("tutorApplications", JSON.stringify(updatedApplications));
+  const deleteApplication = async (id: string): Promise<void> => {
+   await axios.delete(`/api/applications/${id}`, {withCredentials: true});
+   setApplications((prev) => prev.filter((app) => app.id !== id));
   };
   
 

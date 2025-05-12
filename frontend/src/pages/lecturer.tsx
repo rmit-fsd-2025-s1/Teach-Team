@@ -56,17 +56,6 @@ export default function LecturerPage() {
     }
   }, []);
 
-  const handleLogout = () => { //logout
-    logout();
-    router.push("/login");
-    toast({
-      title: "Logged out successfully.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-  };
-
   const handleColumnSort = (column: "course" | "availability") => { //sorting course or availability
     if (sortBy === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -175,15 +164,15 @@ export default function LecturerPage() {
   
     // Find all users with max and min selectionCount
     const mostChosenUsers = users.filter(
-      (u) => u.selectionCount === maxCount && !u.isAdmin
+      (u) => u.selectionCount === maxCount && !u.isLecturer
     );
   
     const leastChosenUsers = users.filter(
-      (u) => u.selectionCount === minCount && !u.isAdmin
+      (u) => u.selectionCount === minCount && !u.isLecturer
     );
   
     const notSelectedUsers: User[] = users.filter(
-      (user) => user.selectionCount === 0 && user.isAdmin === false
+      (user) => user.selectionCount === 0 && user.isLecturer === false
     );
   
     setIsVisualsModalOpen(true);
@@ -211,11 +200,7 @@ export default function LecturerPage() {
 
   return ( //page layout
     <Box minHeight="100vh" display="flex" flexDirection="column">
-      <Header>
-        <Button colorScheme="red" onClick={handleLogout}>
-          Logout
-        </Button>
-      </Header>
+      <Header />
       <Flex flex="1" justifyContent="center" alignItems="center" bg="gray.800">
         <Box
           bg="gray.700"

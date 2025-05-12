@@ -1,65 +1,51 @@
-import {createContext, useContext, useEffect, useState} from 'react';
-import { User, TEST_USERS } from '../types/User';
-import {ReactNode} from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { User } from "../types/User";
 
 interface AuthContextType {
-    user: User | null
-    users: User[];
-    login: (email: string, password: string) => boolean;
-    logout: () => void;
+  user: User | null;
+  login: (email: string, password: string) => Promise<User | null>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({children}: {children: ReactNode}) {
-    const [user, setUser] = useState<User | null>(null);
-    const [users, setUsers] = useState<User[]>([]);
-
-    useEffect(() => {
-        const storesUsers = localStorage.getItem('users');
-        if (storesUsers) {
-            setUsers(JSON.parse(storesUsers));
-        } else {
-            setUsers(TEST_USERS);
-            localStorage.setItem('users', JSON.stringify(TEST_USERS));
-        }
-
-        const storedUser = localStorage.getItem('currentUser');
-        if(storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-
-    }, []);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
 
-    const login = (email: string, password: string): boolean => {
-        const user = users.find((u) => u.email === email && u.password === password);
 
-        if(user) {
-            setUser(user);
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            return true;
-        }
-        return false;
+  const login = async (email: string, password: string): Promise<User | null> => {
+    try {
+      const { data } = await axios.post(
+        "/api/auth/signin",
+        { email, password },
+        { withCredentials: true }
+      );
+      setUser(data.user);
+      return data.user;
+    } catch (err) {
+      return null;
     }
+  };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('currentUser');
-    }
+  const logout = async () => {
+    await axios.post("/api/auth/logout", {}, { withCredentials: true });
+    setUser(null);
+    router.push("/login");
+  };    
 
-    return (
-        <AuthContext.Provider value={{user, users, login, logout}}>
-            {children} 
-        </AuthContext.Provider>
-    );
-
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
-    if(!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be inside AuthProvider");
+  return ctx;
 }

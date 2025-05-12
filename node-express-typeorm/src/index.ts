@@ -4,6 +4,7 @@ import { AppDataSource } from "./data-source";
 import cors from "cors";
 
 import authRouter from "./routes/auth.routes";
+import appRoutes from './routes/application.routes'
 import test from "./routes/test.routes";
 
 const app = express();
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter)
+app.use('/api', appRoutes)
 app.use('/api', test)
 
 AppDataSource.initialize()

@@ -12,9 +12,7 @@ export default function LandingPage() {
 
   return (
     <Box minHeight="100vh" display="flex" flexDirection="column">
-      <Header>
-        <Button bgGradient="linear(to-r, blue.500, teal.300)" onClick={handleClick}>Get Started</Button>
-      </Header>
+      <Header />
       <Flex flex="1" alignItems="center" justifyContent="center" bg="gray.800" px={4}>
         <Box textAlign="center" maxWidth="800px" py={8}>
           <Text

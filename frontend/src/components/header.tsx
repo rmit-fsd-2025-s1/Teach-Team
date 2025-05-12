@@ -21,12 +21,11 @@ export default function Header() {
             </Button>
           </Flex>
         ) : (
-          <Flex>
-            <Link href="/login" mr={4}>
-              Log in
+          <Button bgGradient="linear(to-r, teal.300, blue.500)" _hover={{ bgGradient: "linear(to-r, blue.500, teal.300)" }} size="md">
+            <Link href="/login" _hover={{ textDecoration: "none" }}>
+              Get Started
             </Link>
-            <Link href="/signup">Sign up</Link>
-          </Flex>
+          </Button>
         )}
       </Flex>
     </Box>

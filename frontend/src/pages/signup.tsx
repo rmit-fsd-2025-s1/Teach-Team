@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useToast } from "@chakra-ui/react";
+import { Checkbox, useToast } from "@chakra-ui/react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import {
@@ -20,6 +20,7 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLecturer, setIsLecturer] = useState(false);
   const toast = useToast();
   const router = useRouter();
 
@@ -27,13 +28,11 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-
-      //TODO: ISLECTURER SHOULD HAVE AN INPUT FIELD
       await axios.post("/api/auth/signup", {
         name,
         email,
         password,
-        isLecturer: false
+        isLecturer: isLecturer
     });
 
     toast({
@@ -82,7 +81,7 @@ export default function Signup() {
               <Input id="email" type="email" color={"white"} placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
             </FormControl>
 
-            <FormControl mb={6}>
+            <FormControl mb={4}>
               <FormLabel htmlFor="password" color={"teal.300"}>Password</FormLabel>
               <Input
               color={"white"}
@@ -93,6 +92,10 @@ export default function Signup() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+            </FormControl>
+
+            <FormControl mb={3}>
+              <Checkbox onChange={((e) => setIsLecturer(e.target.checked))} color={"teal.300"} fontWeight={"medium"}>I am a Lecturer</Checkbox>
             </FormControl>
 
             <Button onClick={onSubmit} bgGradient="linear(to-r, blue.500, teal.300)" width="100%" type="submit" _hover={{ bgGradient: "linear(to-r, teal.500, blue.300)" }}>

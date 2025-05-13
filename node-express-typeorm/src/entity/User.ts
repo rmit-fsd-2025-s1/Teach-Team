@@ -1,9 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn} from 'typeorm'
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, JoinTable} from 'typeorm'
+import { Application } from './Application'
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id: string
 
     @Column()
     name: string
@@ -22,4 +23,14 @@ export class User {
 
     @CreateDateColumn()
     createdAt: Date
+
+    @ManyToMany(() => Application, {
+        cascade: true,
+      })
+      @JoinTable({
+        name: "Users_Applications", // Custom join table name
+        joinColumn: { name: "userId", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "applicationId", referencedColumnName: "id" },
+      })
+      applications: Application[];
 }

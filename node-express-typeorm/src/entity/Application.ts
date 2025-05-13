@@ -1,4 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, ManyToOne, JoinColumn} from 'typeorm';
+
+import { User } from './User';
+import { Courses } from './Courses';
 
 export type Availability = "part-time" | "full-time";
 
@@ -13,8 +16,9 @@ export class Application {
   @Column()
   email: string;
 
-  @Column()
-  selectedCourse: string;
+  @ManyToOne(() => Courses)
+  @JoinColumn({ name: "selectedCourse", referencedColumnName: "courseCode" })// uses `selectedCourse` column name in DB
+  selectedCourse: Courses;
 
   @Column()
   role: string;
@@ -45,4 +49,7 @@ export class Application {
 
   @Column({ nullable: true })
   rank?: number;
+
+  @ManyToMany(() => User, (user) => user.applications)
+  users: User[];
 }

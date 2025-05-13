@@ -231,9 +231,6 @@ export default function TutorsPage() {
   return (
     <Box minHeight="100vh" display="flex" flexDirection="column">
       <Header>
-        <Button colorScheme="red" onClick={handleLogout}>
-          Logout
-        </Button>
       </Header>
       <Flex flex="1" justifyContent="center" alignItems="center" bg="gray.800">
         <TutorApplicationForm />

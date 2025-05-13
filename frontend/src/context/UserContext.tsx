@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, TEST_USERS } from '../types/User';
+import axios from 'axios';
+
 
 interface UserContextType {
   users: User[];
@@ -14,28 +16,29 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Load users from localStorage on mount
-    const storedUsers = localStorage.getItem("users");
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
-    } else {
-      setUsers(TEST_USERS);
-      localStorage.setItem("users", JSON.stringify(TEST_USERS));
-    }
+    (async () => {
+      try {
+        const {data} = await axios.get('/api/users', {
+          withCredentials: true,
+        })
+        setUsers(data)
+      } catch (error) {
+        console.log(error)
+      }
+    })();
   }, []);
 
-  const updateUser = (email: string, updates: Partial<User>) => {
-    console.log('Updating user:', email, 'with:', updates);
-    const updatedUsers = users.map(user => {
-      if (user.email === email) {
-        console.log('Found matching user, updating...');
-        return { ...user, ...updates };
-      }
-      return user;
-    });
-    console.log('Updated users:', updatedUsers);
-    setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  const updateUser = async (email: string, updates: Partial<User>): Promise<void> => {
+    try { 
+    const {data: updated} = await axios.put<User>(
+      `/api/users/${encodeURIComponent(email)}`,
+      updates,
+      {withCredentials: true}
+    );
+    setUsers((prev) => prev.map((user) => (user.email === email ? updated : user)));
+  }catch (error) {
+    console.log(error)
+  }
   };
 
   const getUserByEmail = (email: string) => {

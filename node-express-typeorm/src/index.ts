@@ -7,6 +7,8 @@ import authRouter from "./routes/auth.routes";
 import appRoutes from './routes/application.routes'
 import userRoutes from './routes/user.routes'
 import test from "./routes/test.routes";
+import courseRoutes from './routes/course.routes'
+import applicationRoutes from "./routes/application.routes";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,6 +19,8 @@ app.use('/api/auth', authRouter)
 app.use('/api', appRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api', test)
+app.use('/api', courseRoutes)
+app.use("/api", applicationRoutes);
 
 AppDataSource.initialize()
   .then(() => {

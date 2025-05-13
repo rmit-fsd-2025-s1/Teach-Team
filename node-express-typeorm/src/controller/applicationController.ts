@@ -1,9 +1,56 @@
 import {Request, Response} from 'express';
 import { AppDataSource } from '../data-source';
 import { Application } from '../entity/Application';
+import { User } from "../entity/User";
 
 const appRepo = AppDataSource.getRepository(Application);
 
+//CREATE application
+export const createApplication = async (req: Request, res: Response) => {
+    try {
+      const {
+        userId,
+        selectedCourse,
+        role,
+        previousRoles,
+        availability,
+        skills,
+        academicCredentials,
+        comments,
+        rank,
+      } = req.body;
+  
+      const userRepo = AppDataSource.getRepository(User);
+      const appRepo = AppDataSource.getRepository(Application);
+  
+      const user = await userRepo.findOne({ where: { id: userId }, relations: ["applications"] });
+      if (!user) return res.status(404).json({ message: "User not found" });
+  
+      const application = appRepo.create({
+        name: user.name,
+        email: user.email,
+        selectedCourse: { courseCode: selectedCourse },
+        role,
+        previousRoles,
+        availability,
+        skills,
+        academicCredentials,
+        comments,
+        rank,
+      });
+  
+      const savedApp = await appRepo.save(application);
+  
+      user.applications.push(savedApp);
+      await userRepo.save(user);
+  
+      return res.status(201).json({ message: "Application submitted", application: savedApp });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Failed to submit application" });
+    }
+  };
 
 //GET all applications
 export const getLecturerApplications = async(_req: Request, res: Response) => {

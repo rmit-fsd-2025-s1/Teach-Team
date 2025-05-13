@@ -67,7 +67,7 @@ export default function LecturerPage() {
 
   const filteredApplications = applications.filter((app) => {
     const searchLower = searchQuery.toLowerCase();
-    const courseName = getCourseName(app.selectedCourse).toLowerCase();
+    const courseName = (getCourseName(app.selectedCourse) || "unknown").toLowerCase();
     return (
       app.name.toLowerCase().includes(searchLower) ||
       app.email.toLowerCase().includes(searchLower) ||

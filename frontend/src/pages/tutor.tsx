@@ -10,6 +10,7 @@ import { FormField } from "../components/tutor/FormField";
 import { CourseSelect } from "../components/tutor/CourseSelect";
 import { RoleSelect } from "../components/tutor/RoleSelect";
 import { AvailabilityRadio } from "../components/tutor/AvailabilityRadio";
+import axios from "axios";
 
 function TutorApplicationForm() {
   const router = useRouter();
@@ -66,10 +67,10 @@ function TutorApplicationForm() {
     setFormData({ ...formData, availability: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-
-    if ( //error handling incomplete form
+  
+    if (
       !formData.selectedCourse ||
       !formData.academicCredentials ||
       !formData.skills
@@ -83,9 +84,9 @@ function TutorApplicationForm() {
       });
       return;
     }
-
+  
     const numberRegex = /\d/;
-
+  
     if (numberRegex.test(formData.skills)) {
       toast({
         title: "Invalid Skills",
@@ -96,7 +97,7 @@ function TutorApplicationForm() {
       });
       return;
     }
-
+  
     if (numberRegex.test(formData.academicCredentials)) {
       toast({
         title: "Invalid Academic Credentials",
@@ -107,7 +108,7 @@ function TutorApplicationForm() {
       });
       return;
     }
-
+  
     if (formData.previousRoles && numberRegex.test(formData.previousRoles)) {
       toast({
         title: "Invalid Previous Roles",
@@ -118,27 +119,41 @@ function TutorApplicationForm() {
       });
       return;
     }
-
-    const newApplication: TutorApplication = {
-      ...formData,
-      id: Date.now().toString(),
-      dateApplied: new Date().toISOString(),
-      isSelected: false,
-    };
-
-    addApplication(newApplication);
-
-    toast({
-      title: "Application Submitted",
-      description: "Your application has been submitted successfully!",
-      status: "success",
-      duration: 5000, 
-      isClosable: true,
-    });
-
-    router.push("/submitted");
+  
+    try {
+      await axios.post("/api/applications", {
+        userId: user?.id,
+        selectedCourse: formData.selectedCourse,
+        role: formData.role,
+        previousRoles: formData.previousRoles,
+        availability: formData.availability,
+        skills: formData.skills,
+        academicCredentials: formData.academicCredentials,
+        comments: "", // optional
+        rank: null,   // optional
+      });
+  
+      toast({
+        title: "Application Submitted",
+        description: "Your application has been submitted successfully!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+  
+      router.push("/submitted");
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: "Submission Failed",
+        description: error.response?.data?.message || "Something went wrong.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
-
+  
   return (
     <Box bg="gray.700" p={8} borderRadius="md" width="500px" maxWidth="90%" my={8}>
       <Flex justifyContent="space-between" alignItems="center" mb={6}>

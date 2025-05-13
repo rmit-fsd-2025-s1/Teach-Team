@@ -1,5 +1,11 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
-import { COURSES } from "../../types/application";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Course {
+  courseCode: string;
+  courseName: string;
+}
 
 interface CourseSelectProps {
   value: string;
@@ -7,6 +13,21 @@ interface CourseSelectProps {
 }
 
 export function CourseSelect({ value, onChange }: CourseSelectProps) {
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get<Course[]>("/api/courses");
+        setCourses(res.data);
+      } catch (err) {
+        console.error("Failed to fetch courses", err);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <FormControl mb={4}>
       <FormLabel color="white">Select a Course</FormLabel>
@@ -25,9 +46,9 @@ export function CourseSelect({ value, onChange }: CourseSelectProps) {
         required
       >
         <option value="">Select a Course</option>
-        {COURSES.map((course) => (
-          <option key={course.code} value={course.code}>
-            {course.code} - {course.name}
+        {courses.map((course) => (
+          <option key={course.courseCode} value={course.courseCode}>
+            {course.courseCode} - {course.courseName}
           </option>
         ))}
       </Select>

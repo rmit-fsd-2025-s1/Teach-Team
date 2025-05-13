@@ -5,6 +5,7 @@ import cors from "cors";
 
 import authRouter from "./routes/auth.routes";
 import appRoutes from './routes/application.routes'
+import userRoutes from './routes/user.routes'
 import test from "./routes/test.routes";
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter)
 app.use('/api', appRoutes)
+app.use('/api/users', userRoutes)
 app.use('/api', test)
 
 AppDataSource.initialize()

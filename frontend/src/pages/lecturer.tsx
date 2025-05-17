@@ -6,6 +6,7 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -23,19 +24,27 @@ import ApplicationVisualsModal from "../components/lecturer/ApplicationVisualsMo
 export default function LecturerPage() {
   const router = useRouter();
   const toast = useToast();
-  const { applications, updateApplication, deleteApplication } = useTutorApplication();
+
+  const { updateApplication, deleteApplication } = useTutorApplication();
+  const {logout, user} = useAuth();
+  const {updateUser, getUserByEmail, getUsers} = useUser();
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("availability");
+  const [sortBy, setSortBy] = useState<"course" | "availability" | "name" | "skills">("availability");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const [roleFilter, setRoleFilter] = useState("");
+  const [availabilityFilter, setAvailabilityFilter] = useState("");
+  const [skillsFilter, setSkillsFilter] = useState("");
+
+
+  const [applications, setApplications] = useState<Application[]>([]); // State to store fetched applications
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isVisualsModalOpen, setIsVisualsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] =
     useState<Application | null>(null);
   const [newComment, setNewComment] = useState("");
-  const { logout, user } = useAuth();
-  const { updateUser, getUserByEmail } = useUser();
-  const { getUsers } = useUser();
 
   const [visualsData, setVisualsData] = useState({
     mostChosenUsers: [] as User[],
@@ -54,7 +63,46 @@ export default function LecturerPage() {
         isClosable: true,
       });
     }
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+  const params = new URLSearchParams({
+    search: searchQuery,
+    sortBy,
+    order: sortDirection,
+  } as any).toString();
+
+  axios
+    .get<Application[]>(`/api/lecturer/applications?${params}`, { withCredentials: true })
+    .then(({ data }) => setApplications(data))
+    .catch(() =>
+      toast({ title: "Failed to load", status: "error", duration: 3000 })
+    );
+}, [
+  searchQuery,
+  sortDirection,
+  sortBy,
+]);
+
+const sortedApplications = [...applications].sort((a, b) => {
+    let cmp = 0;
+    switch (sortBy) {
+      case "course":
+        cmp = (getCourseName(a.selectedCourse) || "").localeCompare(getCourseName(b.selectedCourse) || "");
+        break;
+      case "availability":
+        cmp = a.availability.localeCompare(b.availability);
+        break;
+      case "name":
+        cmp = a.name.localeCompare(b.name);
+        break;
+      case "skills":
+        cmp = a.skills.localeCompare(b.skills);
+        break;
+    }
+    return sortDirection === "asc" ? cmp : -cmp;
+  });
+
 
   const handleColumnSort = (column: "course" | "availability") => { //sorting course or availability
     if (sortBy === column) {
@@ -64,43 +112,6 @@ export default function LecturerPage() {
       setSortDirection("asc");
     }
   };
-
-  const filteredApplications = applications.filter((app) => {
-    const searchLower = searchQuery.toLowerCase();
-    const courseName = (getCourseName(app.selectedCourse) || "unknown").toLowerCase();
-    return (
-      app.name.toLowerCase().includes(searchLower) ||
-      app.email.toLowerCase().includes(searchLower) ||
-      courseName.includes(searchLower) ||
-      app.skills.toLowerCase().includes(searchLower) ||
-      app.availability.toLowerCase().includes(searchLower)
-    );
-  });
-
-  const sortedApplications = [...filteredApplications].sort((a, b) => {
-    let comparison = 0;
-
-    switch (sortBy) { //options for filtering
-      case "course":
-        const courseA = getCourseName(a.selectedCourse);
-        const courseB = getCourseName(b.selectedCourse);
-        comparison = courseA.localeCompare(courseB);
-        break;
-      case "availability":
-        comparison = a.availability.localeCompare(b.availability);
-        break;
-      case "name":
-        comparison = a.name.localeCompare(b.name);
-        break;
-      case "skills":
-        comparison = a.skills.localeCompare(b.skills);
-        break;
-      default:
-        comparison = a.availability.localeCompare(b.availability);
-    }
-
-    return sortDirection === "asc" ? comparison : -comparison;
-  });
 
   const handleRankChange = (id: string, rank: string | number) => { //ranking applicants
     updateApplication(id, { rank });
@@ -223,7 +234,7 @@ export default function LecturerPage() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             sortBy={sortBy}
-            setSortBy={setSortBy}
+            setSortBy={(col) => handleColumnSort(col as any)}
           />
 
           <ApplicationTable

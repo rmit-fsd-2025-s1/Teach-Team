@@ -53,14 +53,38 @@ export const createApplication = async (req: Request, res: Response) => {
   };
 
 //GET all applications
-export const getLecturerApplications = async(_req: Request, res: Response) => {
-    try {
-        const apps = await appRepo.find({order: {dateApplied: "DESC"} });
-        res.json(apps);
-    } catch (error) { 
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
+// node-express-typeorm/src/controller/applicationController.ts
+
+export const getLecturerApplications = async (req: Request, res: Response) => {
+  const { search, sortBy, order } = req.query;
+  const qb = AppDataSource.getRepository(Application)
+    .createQueryBuilder("app");
+
+  if (search && typeof search === "string") {
+    const q = `%${search.toLowerCase()}%`;
+    qb.where(
+      `LOWER(app.name) LIKE :q
+       OR LOWER(app.email) LIKE :q
+       OR LOWER(app.skills) LIKE :q
+       OR LOWER(app.availability) LIKE :q
+       OR LOWER(app.selectedCourse) LIKE :q
+       OR LOWER(app.role) LIKE :q`,
+      { q }
+    );
+  }
+
+  // keep your existing sorting logic here...
+  if (sortBy && typeof sortBy === "string") {
+    const dir = (order as string)?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+    qb.orderBy(`app.${sortBy}`, dir);
+  } else {
+    qb.orderBy("app.dateApplied", "DESC");
+  }
+
+  const apps = await qb.getMany();
+  return res.json(apps);
+};
+
 
 
 //PUT update application

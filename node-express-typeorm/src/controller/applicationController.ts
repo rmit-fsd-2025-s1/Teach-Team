@@ -53,7 +53,6 @@ export const createApplication = async (req: Request, res: Response) => {
   };
 
 //GET all applications
-// node-express-typeorm/src/controller/applicationController.ts
 
 export const getLecturerApplications = async (req: Request, res: Response) => {
   const { search, sortBy, order } = req.query;
@@ -73,7 +72,6 @@ export const getLecturerApplications = async (req: Request, res: Response) => {
     );
   }
 
-  // keep your existing sorting logic here...
   if (sortBy && typeof sortBy === "string") {
     const dir = (order as string)?.toUpperCase() === "DESC" ? "DESC" : "ASC";
     qb.orderBy(`app.${sortBy}`, dir);

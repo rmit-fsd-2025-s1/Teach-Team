@@ -33,10 +33,6 @@ export default function LecturerPage() {
   const [sortBy, setSortBy] = useState<"course" | "availability" | "name" | "skills">("availability");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  const [roleFilter, setRoleFilter] = useState("");
-  const [availabilityFilter, setAvailabilityFilter] = useState("");
-  const [skillsFilter, setSkillsFilter] = useState("");
-
 
   const [applications, setApplications] = useState<Application[]>([]); // State to store fetched applications
 

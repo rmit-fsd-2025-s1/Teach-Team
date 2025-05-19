@@ -40,7 +40,7 @@ const ApplicantVisualsModal = ({
   notSelectedUsers,
 }: ApplicantVisualsModalProps) => {
   const data = {
-    labels: ["Most Chosen", "Least Chosen"],
+    labels: [`Most Chosen: ${mostChosenUsers[0]?.name}`, `Least Chosen: ${leastChosenUsers[0]?.name}`],
     datasets: [
       {
         data: [

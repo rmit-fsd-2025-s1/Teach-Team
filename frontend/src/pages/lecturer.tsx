@@ -62,25 +62,27 @@ export default function LecturerPage() {
  
   
 
-  useEffect(() => {
-  const params = new URLSearchParams({
-    search: searchQuery,
-    sortBy,
-    order: sortDirection,
-  } as any).toString();
+  const fetchApplications = async () => {
+    try {
+      const params = new URLSearchParams({
+        search: searchQuery,
+        sortBy,
+        order: sortDirection,
+      } as any).toString();
 
-  axios
-    .get<Application[]>(`/api/lecturer/applications?${params}`, { withCredentials: true })
-    .then(({ data }) => setApplications(data))
-    .catch((e) => {
-      console.log(e)
-      toast({ title: "Failed to load", description: e.error, status: "error", duration: 3000 })
-  });
-}, [
-  searchQuery,
-  sortDirection,
-  sortBy,
-]);
+      const { data } = await axios.get<Application[]>(
+        `/api/lecturer/applications?${params}`,
+        { withCredentials: true }
+      );
+      setApplications(data);
+    } catch {
+      toast({ title: "Failed to load applications", status: "error", duration: 3000 });
+    }
+  };
+
+  useEffect(() => {
+    fetchApplications()
+  }, [searchQuery, sortBy, sortDirection])
 
 const sortedApplications = [...applications].sort((a, b) => {
     let cmp = 0;
@@ -143,21 +145,39 @@ const sortedApplications = [...applications].sort((a, b) => {
     }
   };
 
-  const handleSelect = (application: Application) => { //select button implementation
-    const user = getUserByEmail(application.email);
-    if (user) {
-      if (!application.isSelected) {
-        updateUser(application.email, {
-          selectionCount: user.selectionCount + 1,
-        });
+  const handleSelect = async (application: Application) => { //select button implementation
+    const user = getUserByEmail(application.email)
+    if(!user) return;
+
+    try {
+      if(!application.isSelected) {
+        await updateUser(application.email, {selectionCount: user.selectionCount + 1})
+        await updateApplication(application.id, {isSelected: true})
+        toast({
+          title: "Selected",
+          status: "success",
+          duration: 3000,
+          isClosable: true
+        })
       } else {
-        updateUser(application.email, {
-          selectionCount: user.selectionCount - 1,
-        });
+        await updateUser(application.email, {selectionCount: user.selectionCount - 1})
+        await updateApplication(application.id, {isSelected: false})
+        toast({
+          title: "Unselected",
+          status: "success",
+          duration: 3000,
+          isClosable: true
+        })
       }
-      updateApplication(application.id, {
-        isSelected: !application.isSelected,
-      });
+
+      await fetchApplications()
+    } catch (error) {
+      toast({
+        title: "Error updating application",
+        status: "error",
+        duration: 5000,
+        isClosable: true
+      })
     }
   };
   

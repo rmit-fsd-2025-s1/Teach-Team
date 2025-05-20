@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import { AppDataSource } from '../data-source';
 import { Application } from '../entity/Application';
 import { User } from "../entity/User";
+import { Courses } from '../entity/Courses';
 
 const appRepo = AppDataSource.getRepository(Application);
 
@@ -10,7 +11,7 @@ export const createApplication = async (req: Request, res: Response) => {
     try {
       const {
         userId,
-        selectedCourse,
+        selectedCourse: courseCode,
         role,
         previousRoles,
         availability,
@@ -19,9 +20,13 @@ export const createApplication = async (req: Request, res: Response) => {
         comments,
         rank,
       } = req.body;
-  
+
+      const courseRepo = AppDataSource.getRepository(Courses)
       const userRepo = AppDataSource.getRepository(User);
       const appRepo = AppDataSource.getRepository(Application);
+
+      const course = await courseRepo.findOneBy({courseCode})
+      if(!course) return res.status(404).json({message: "Course not found"})
   
       const user = await userRepo.findOne({ where: { id: userId }, relations: ["applications"] });
       if (!user) return res.status(404).json({ message: "User not found" });
@@ -29,7 +34,7 @@ export const createApplication = async (req: Request, res: Response) => {
       const application = appRepo.create({
         name: user.name,
         email: user.email,
-        selectedCourse: { courseCode: selectedCourse },
+        selectedCourse: course,
         role,
         previousRoles,
         availability,
@@ -48,16 +53,16 @@ export const createApplication = async (req: Request, res: Response) => {
   
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Failed to submit application" });
+      return res.status(500).json({ message: "Failed to submit application", error: error });
     }
   };
-
 //GET all applications
 
 export const getLecturerApplications = async (req: Request, res: Response) => {
   const { search, sortBy, order } = req.query;
   const qb = AppDataSource.getRepository(Application)
-    .createQueryBuilder("app");
+    .createQueryBuilder("app")
+    .leftJoinAndSelect("app.selectedCourse", "courses");
 
   if (search && typeof search === "string") {
     const q = `%${search.toLowerCase()}%`;
@@ -66,8 +71,8 @@ export const getLecturerApplications = async (req: Request, res: Response) => {
        OR LOWER(app.email) LIKE :q
        OR LOWER(app.skills) LIKE :q
        OR LOWER(app.availability) LIKE :q
-       OR LOWER(app.selectedCourse) LIKE :q
-       OR LOWER(app.role) LIKE :q`,
+       OR LOWER(app.role) LIKE :q
+       OR LOWER(courses.courseName) LIKE :q`,
       { q }
     );
   }
@@ -96,7 +101,7 @@ export const updateApplication = async (req: Request, res: Response) => {
         const updatedApp = await appRepo.save(app);
         res.json(updatedApp);
     } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Failed to update application", error: error });
     }
 }
 
@@ -106,7 +111,7 @@ export const deleteApplication = async (req: Request, res: Response) => {
         await appRepo.delete(req.params.id);
         res.json({ message: "Application deleted" });
     } catch (error) {
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Failed to delete application", error: error });
     }
 }
 

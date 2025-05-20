@@ -35,7 +35,7 @@ export default function LecturerPage() {
 
 
   const [applications, setApplications] = useState<Application[]>([]); // State to store fetched applications
-
+  
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isVisualsModalOpen, setIsVisualsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] =
@@ -46,8 +46,7 @@ export default function LecturerPage() {
     mostChosenUsers: [] as User[],
     leastChosenUsers: [] as User[],
     notSelectedUsers: [] as User[],
-  });  
-
+  }); 
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -60,6 +59,8 @@ export default function LecturerPage() {
       });
     }
   }, [user]);
+ 
+  
 
   useEffect(() => {
   const params = new URLSearchParams({
@@ -71,9 +72,10 @@ export default function LecturerPage() {
   axios
     .get<Application[]>(`/api/lecturer/applications?${params}`, { withCredentials: true })
     .then(({ data }) => setApplications(data))
-    .catch(() =>
-      toast({ title: "Failed to load", status: "error", duration: 3000 })
-    );
+    .catch((e) => {
+      console.log(e)
+      toast({ title: "Failed to load", description: e.error, status: "error", duration: 3000 })
+  });
 }, [
   searchQuery,
   sortDirection,

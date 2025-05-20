@@ -101,6 +101,14 @@ export function ApplicationTable({
         <Tbody>
           {applications.map((application) => {
             const user = getUserByEmail(application.email);
+            const courseObj = getCourseName(application.selectedCourse);
+let courseDisplay: string;
+if (courseObj && typeof courseObj === "object" && "courseName" in courseObj) {
+  courseDisplay = (courseObj as any).courseName;
+} else {
+  courseDisplay = String(courseObj);
+}
+
             return (
               <Tr key={application.id} _hover={{ bg: "gray.600" }}>
                 <Td>
@@ -117,9 +125,7 @@ export function ApplicationTable({
                 </Td>
                 <Td color="white">{application.name}</Td>
                 <Td color="white">{application.email}</Td>
-                <Td color="white">
-                  {getCourseName(application.selectedCourse)}
-                </Td>
+                <Td color="white">{courseDisplay}</Td>
                 <Td color="white">{application.role}</Td>
                 <Td color="white">{application.availability}</Td>
                 <Td color="white" padding={5}>

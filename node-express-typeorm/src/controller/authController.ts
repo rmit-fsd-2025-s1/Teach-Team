@@ -33,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(500).json({message: 'Internal server error'})
+        return res.status(500).json({message: 'Failed to create user', error: error})
     }
 
 }
@@ -59,7 +59,7 @@ export const signin = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(500).json({message: 'Internal server error'})
+        return res.status(500).json({message: 'Failed to signin', error: error})
     }   
 
 }
@@ -69,7 +69,7 @@ export const logout = async (_req: Request, res: Response) => {
         return res.json({message: 'Logged out'})
     } catch (error) {
         console.log(error)
-        return res.status(500).json({message: 'Internal server error'})
+        return res.status(500).json({message: 'Failed to logout', error: error})
     }
 }
     

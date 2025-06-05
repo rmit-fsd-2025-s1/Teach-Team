@@ -1,4 +1,3 @@
-// Displays the table and the respective detail
 import {
   Box,
   Table,
@@ -15,7 +14,6 @@ import {
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Application } from "../../types/application";
 import { User } from "../../types/User";
-import { getCourseName } from "../../utils/courseUtils";
 
 interface ApplicationTableProps {
   applications: Application[];
@@ -101,13 +99,11 @@ export function ApplicationTable({
         <Tbody>
           {applications.map((application) => {
             const user = getUserByEmail(application.email);
-            const courseObj = getCourseName(application.selectedCourse);
-let courseDisplay: string;
-if (courseObj && typeof courseObj === "object" && "courseName" in courseObj) {
-  courseDisplay = (courseObj as any).courseName;
-} else {
-  courseDisplay = String(courseObj);
-}
+
+           
+            const courseDisplay =
+              application.selectedCourseEntity?.courseName ||
+              application.selectedCourse; 
 
             return (
               <Tr key={application.id} _hover={{ bg: "gray.600" }}>

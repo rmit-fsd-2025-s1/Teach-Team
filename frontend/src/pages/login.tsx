@@ -26,6 +26,17 @@ export default function Login() {
     e.preventDefault();
     const loginUser = await login(email, password);
     console.log(loginUser)
+
+    if(loginUser?.isBlocked === true) {
+      toast({ 
+        title: "Your account is blocked",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      return
+    }
+
     if (loginUser) {
       router.push("/" + (loginUser?.isLecturer ? "lecturer" : "tutor"));
     } else {

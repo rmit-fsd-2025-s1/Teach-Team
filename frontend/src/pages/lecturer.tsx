@@ -68,6 +68,7 @@ export default function LecturerPage() {
         search: searchQuery,
         sortBy,
         order: sortDirection,
+        lecturerId: user?.id || "",
       } as any).toString();
 
       const { data } = await axios.get<Application[]>(

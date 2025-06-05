@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { User } from "../types/User";
@@ -15,17 +21,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-
-
-  const login = async (email: string, password: string): Promise<User | null> => {
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<User | null> => {
     try {
       const { data } = await axios.post(
         "/api/auth/signin",
         { email, password },
         { withCredentials: true }
       );
-      setUser(data.user);
-      return data.user;
+      if (data.user.isBlocked) {
+        return data.user;
+      } else {
+        setUser(data.user);
+        return data.user;
+      }
     } catch (err) {
       return null;
     }
@@ -35,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await axios.post("/api/auth/logout", {}, { withCredentials: true });
     setUser(null);
     router.push("/login");
-  };    
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

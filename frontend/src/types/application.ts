@@ -32,6 +32,11 @@ export interface Course {
     comments?: string;
     rank?: string | number;
     isSelected?: boolean;
+    selectedCourseEntity?: {
+    courseCode: string;
+    courseName: string;
+    semester: string;
+  };
   }
   
   

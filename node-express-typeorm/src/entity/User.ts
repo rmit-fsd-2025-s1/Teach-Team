@@ -18,6 +18,9 @@ export class User {
     @Column({type: "boolean", default: false})
     isLecturer: boolean
 
+    @Column({type: "boolean", default: false})
+    isBlocked: boolean
+
     @Column()
     selectionCount: number
 

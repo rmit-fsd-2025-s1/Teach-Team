@@ -4,6 +4,7 @@ export type User = {
     email: string;
     password: string;
     isLecturer: boolean;
+    isBlocked?: boolean;
     selectionCount: number;
 };
 

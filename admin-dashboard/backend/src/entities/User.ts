@@ -26,6 +26,9 @@ export class User {
   @Column({ name: "isBlocked", type: "tinyint", width: 1, default: 0 })
   isBlocked!: boolean;
 
+  @Column({ name: "selectionCount", type: "int", default: 0 })
+  selectionCount!: number;
+
   @OneToMany(
     () => LecturerCourse,
     (assignment) => assignment.lecturer

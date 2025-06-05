@@ -8,4 +8,7 @@ export class Courses{
     @Column()
     courseName: string;
 
+    @Column()
+    semester: string;
+
 }

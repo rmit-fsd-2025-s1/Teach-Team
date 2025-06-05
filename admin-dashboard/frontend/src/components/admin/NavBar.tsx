@@ -23,6 +23,9 @@ export default function NavBar() {
         <Link fontSize="lg" onClick={() => router.push("/blockLogin")}>
           Manage Tutors Accounts
         </Link>
+        <Link fontSize="lg" onClick={() => router.push("/StatisticalReports")}>
+          Statistical Reports
+        </Link>
       </VStack>
     </Box>
   );

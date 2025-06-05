@@ -44,6 +44,26 @@ export const adminResolvers = {
       const userRepo = AppDataSource.getRepository(User);
       return userRepo.find({ where: { isLecturer: false } });
     },
+
+    // Statistical reports
+    chosenCandidates: async () => {
+      const userRepo = AppDataSource.getRepository(User);
+      return userRepo.createQueryBuilder("user")
+        .where("user.selectionCount >= :min", { min: 1 })
+        .getMany();
+    },
+    popularCandidates: async () => {
+      const userRepo = AppDataSource.getRepository(User);
+      return userRepo.createQueryBuilder("user")
+        .where("user.selectionCount > :min", { min: 3 })
+        .getMany();
+    },
+    candidatesYetToBegin: async () => {
+      const userRepo = AppDataSource.getRepository(User);
+      return userRepo.createQueryBuilder("user")
+        .where("user.selectionCount = :val", { val: 0 })
+        .getMany();
+    },
   },
 
   Mutation: {

@@ -7,6 +7,7 @@ export const typeDefs = `
     email: String!
     isLecturer: Boolean!
     isBlocked: Boolean!
+    selectionCount: Int!
   }
 
   type Course {
@@ -33,6 +34,11 @@ export const typeDefs = `
     adminCourseAssignments(courseCode: String!): [LecturerCourseAssignment!]!
 
     adminAllTutors: [User!]!
+
+    # Statistical reports
+    chosenCandidates: [User!]!
+    popularCandidates: [User!]!
+    candidatesYetToBegin: [User!]!
   }
 
 

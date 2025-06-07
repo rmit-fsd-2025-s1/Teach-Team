@@ -11,7 +11,7 @@ const ApplicationSubmitted = () => {
 
   return (
     <div>
-      <Header>{""}</Header>
+      <Header></Header>
       <Center height="84vh" flexDirection="column" bg="gray.800">
         <Box textAlign="center" color="white">
         <Box mb={4}>

@@ -10,6 +10,8 @@ import {
   Select,
   Flex,
   Text,
+  HStack,
+  Badge,
 } from "@chakra-ui/react";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Application } from "../../types/application";
@@ -100,13 +102,16 @@ export function ApplicationTable({
           {applications.map((application) => {
             const user = getUserByEmail(application.email);
 
-           
             const courseDisplay =
               application.selectedCourseEntity?.courseName ||
               application.selectedCourse; 
 
             return (
-              <Tr key={application.id} _hover={{ bg: "gray.600" }}>
+              <Tr 
+                key={application.id}
+                opacity={application.isUnavailable ? 0.5 : 1}
+                bg={application.isUnavailable ? "gray.600" : "transparent"}
+              >
                 <Td>
                   <Button
                     size="sm"
@@ -115,15 +120,30 @@ export function ApplicationTable({
                       bg: application.isSelected ? "red.500" : "green.400",
                     }}
                     onClick={() => onSelect(application)}
+                    isDisabled={application.isUnavailable}
                   >
                     {application.isSelected ? "Unselect" : "Select"}
                   </Button>
                 </Td>
-                <Td color="white">{application.name}</Td>
+                <Td color="white">
+                  <HStack>
+                    <Text>{application.name}</Text>
+                    {application.isUnavailable && (
+                      <Badge colorScheme="red">Unavailable</Badge>
+                    )}
+                  </HStack>
+                </Td>
                 <Td color="white">{application.email}</Td>
                 <Td color="white">{courseDisplay}</Td>
                 <Td color="white">{application.role}</Td>
-                <Td color="white">{application.availability}</Td>
+                <Td color="white">
+                  <HStack>
+                    <Text>{application.availability}</Text>
+                    {application.isUnavailable && (
+                      <Badge colorScheme="red">Unavailable</Badge>
+                    )}
+                  </HStack>
+                </Td>
                 <Td color="white" padding={5}>
                   <Select
                     value={application.rank || ""}

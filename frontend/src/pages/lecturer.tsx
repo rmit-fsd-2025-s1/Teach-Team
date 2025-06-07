@@ -5,9 +5,11 @@ import {
   Text,
   Button,
   useToast,
+  Badge,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useQuery, useSubscription, gql } from "@apollo/client";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useTutorApplication } from "../context/TutorApplicationContext";
@@ -21,6 +23,18 @@ import { User } from "../types/User";
 import { getCourseName } from "../utils/courseUtils";
 import ApplicationVisualsModal from "../components/lecturer/ApplicationVisualsModal";
 
+const APPLICANT_AVAILABILITY_SUBSCRIPTION = gql`
+  subscription OnApplicantAvailabilityChanged {
+    applicantAvailabilityChanged {
+      id
+      name
+      email
+      selectedCourse
+      isUnavailable
+    }
+  }
+`;
+
 export default function LecturerPage() {
   const router = useRouter();
   const toast = useToast();
@@ -33,20 +47,42 @@ export default function LecturerPage() {
   const [sortBy, setSortBy] = useState<"course" | "availability" | "name" | "skills">("availability");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-
-  const [applications, setApplications] = useState<Application[]>([]); // State to store fetched applications
-  
+  const [applications, setApplications] = useState<Application[]>([]);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isVisualsModalOpen, setIsVisualsModalOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] =
-    useState<Application | null>(null);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [newComment, setNewComment] = useState("");
 
   const [visualsData, setVisualsData] = useState({
     mostChosenUsers: [] as User[],
     leastChosenUsers: [] as User[],
     notSelectedUsers: [] as User[],
-  }); 
+  });
+
+  // Subscribe to applicant availability changes
+  useSubscription(APPLICANT_AVAILABILITY_SUBSCRIPTION, {
+    onData: ({ data }) => {
+      const changedApplicant = data.data.applicantAvailabilityChanged;
+      if (changedApplicant.isUnavailable) {
+        toast({
+          title: "Applicant Unavailable",
+          description: `${changedApplicant.name} is now unavailable for ${changedApplicant.selectedCourse}`,
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        // Update the applications list with the new availability status
+        setApplications(prev => 
+          prev.map(app => 
+            app.id === changedApplicant.id 
+              ? { ...app, isUnavailable: true }
+              : app
+          )
+        );
+      }
+    },
+  });
+
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -59,8 +95,6 @@ export default function LecturerPage() {
       });
     }
   }, [user]);
- 
-  
 
   const fetchApplications = async () => {
     try {
@@ -85,7 +119,7 @@ export default function LecturerPage() {
     fetchApplications()
   }, [searchQuery, sortBy, sortDirection])
 
-const sortedApplications = [...applications].sort((a, b) => {
+  const sortedApplications = [...applications].sort((a, b) => {
     let cmp = 0;
     switch (sortBy) {
       case "course":
@@ -104,8 +138,7 @@ const sortedApplications = [...applications].sort((a, b) => {
     return sortDirection === "asc" ? cmp : -cmp;
   });
 
-
-  const handleColumnSort = (column: "course" | "availability") => { //sorting course or availability
+  const handleColumnSort = (column: "course" | "availability") => {
     if (sortBy === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -114,18 +147,18 @@ const sortedApplications = [...applications].sort((a, b) => {
     }
   };
 
-  const handleRankChange = (id: string, rank: string | number) => { //ranking applicants
+  const handleRankChange = (id: string, rank: string | number) => {
     updateApplication(id, { rank });
   };
 
-  const handleViewDetails = (application: Application) => { //view details button
+  const handleViewDetails = (application: Application) => {
     setSelectedApplication(application);
     setNewComment(application.comments || "");
     setIsDetailsModalOpen(true);
     setIsVisualsModalOpen(false);
   };
 
-  const handleSaveComment = () => { //adding comments for an applicant
+  const handleSaveComment = () => {
     if (selectedApplication) {
       updateApplication(selectedApplication.id, {
         ...selectedApplication,
@@ -146,7 +179,7 @@ const sortedApplications = [...applications].sort((a, b) => {
     }
   };
 
-  const handleSelect = async (application: Application) => { //select button implementation
+  const handleSelect = async (application: Application) => {
     const user = getUserByEmail(application.email)
     if(!user) return;
 
@@ -181,18 +214,15 @@ const sortedApplications = [...applications].sort((a, b) => {
       })
     }
   };
-  
 
-  const handleViewVisuals = () => { // grpah implementation
+  const handleViewVisuals = () => {
     const users = getUsers();
   
-    // Find max and min (non-zero) selection counts
     const maxCount = Math.max(...users.map((u) => u.selectionCount));
     const minCount = Math.min(
       ...users.filter((u) => u.selectionCount > 0).map((u) => u.selectionCount)
     );
   
-    // Find all users with max and min selectionCount
     const mostChosenUsers = users.filter(
       (u) => u.selectionCount === maxCount && !u.isLecturer
     );
@@ -214,7 +244,7 @@ const sortedApplications = [...applications].sort((a, b) => {
     });
   };  
 
-  const handleDeleteApplication = () => { //deleting an application
+  const handleDeleteApplication = () => {
     if (selectedApplication) {
       deleteApplication(selectedApplication.id); 
       setIsDetailsModalOpen(false);  
@@ -226,9 +256,8 @@ const sortedApplications = [...applications].sort((a, b) => {
       });
     }
   };
-  
 
-  return ( //page layout
+  return (
     <Box minHeight="100vh" display="flex" flexDirection="column">
       <Header />
       <Flex flex="1" justifyContent="center" alignItems="center" bg="gray.800">
@@ -285,7 +314,6 @@ const sortedApplications = [...applications].sort((a, b) => {
         setComment={setNewComment}
         onSave={handleSaveComment}
         onDelete={handleDeleteApplication}
-
       />
 
       <Footer />

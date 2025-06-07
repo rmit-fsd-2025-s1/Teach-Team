@@ -112,3 +112,5 @@ They are also able to assign lecturers to current courses. Once a lecturer is as
 Admins are able to block and unblock logins for tutor accounts. 
 
 They can also generate three reports; A list of all chosen candidates, A candidate who has been chosen for more than three courses, and any remaining candidates who have not been chosen for any courses.
+
+Admins are also able to mark certain applicants as unavailable, marking their application as "unavailable" to lecturers. 

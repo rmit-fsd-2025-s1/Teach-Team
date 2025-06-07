@@ -1,3 +1,4 @@
+import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   Box,
   Heading,
@@ -13,25 +14,104 @@ import {
   Alert,
   AlertIcon,
   HStack,
-  IconButton,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
 import Layout from "../components/admin/Layout";
+
+const GET_APPLICATIONS = gql`
+  query GetAllApplications {
+    adminAllApplications {
+      id
+      name
+      email
+      selectedCourse
+      role
+      previousRoles
+      availability
+      skills
+      academicCredentials
+      isUnavailable
+    }
+  }
+`;
+
+const SET_UNAVAILABLE = gql`
+  mutation SetApplicantUnavailable($applicationId: ID!) {
+    setApplicantUnavailable(applicationId: $applicationId) {
+      id
+      isUnavailable
+    }
+  }
+`;
+
+const SET_AVAILABLE = gql`
+  mutation SetApplicantAvailable($applicationId: ID!) {
+    setApplicantAvailable(applicationId: $applicationId) {
+      id
+      isUnavailable
+    }
+  }
+`;
 
 interface Applicant {
   id: string;
   name: string;
   email: string;
   selectedCourse: string;
+  role: string;
+  previousRoles: string;
+  availability: string;
+  skills: string;
+  academicCredentials: string;
+  isUnavailable: boolean;
 }
 
 export default function ApplicantUnavailabilityPage() {
-  // Placeholder for loading state
-  const loading = false;
-  // Placeholder for error state
-  const error = null as { message: string } | null;
-  // Placeholder for data
-  const applicants: Applicant[] = [];
+  const toast = useToast();
+  const { data, loading, error, refetch } = useQuery(GET_APPLICATIONS);
+
+  const [setUnavailable] = useMutation(SET_UNAVAILABLE, {
+    onCompleted: () => {
+      toast({
+        title: "Applicant marked as unavailable",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      refetch();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error marking applicant as unavailable",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const [setAvailable] = useMutation(SET_AVAILABLE, {
+    onCompleted: () => {
+      toast({
+        title: "Applicant marked as available",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      refetch();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error marking applicant as available",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+  });
 
   if (loading) {
     return (
@@ -53,6 +133,16 @@ export default function ApplicantUnavailabilityPage() {
       </Layout>
     );
   }
+
+  const applicants: Applicant[] = data?.adminAllApplications || [];
+
+  const handleToggleAvailability = (applicationId: string, currentStatus: boolean) => {
+    if (currentStatus) {
+      setAvailable({ variables: { applicationId } });
+    } else {
+      setUnavailable({ variables: { applicationId } });
+    }
+  };
 
   return (
     <Layout>
@@ -84,12 +174,13 @@ export default function ApplicantUnavailabilityPage() {
                   <Td>{applicant.email}</Td>
                   <Td>
                     <HStack spacing={2}>
-                      <IconButton
-                        aria-label="Edit Availability"
-                        icon={<EditIcon />}
+                      <Button
+                        colorScheme={applicant.isUnavailable ? "green" : "purple"}
                         size="sm"
-                        onClick={() => {}}
-                      />
+                        onClick={() => handleToggleAvailability(applicant.id, applicant.isUnavailable)}
+                      >
+                        {applicant.isUnavailable ? "Make Available" : "Make Unavailable"}
+                      </Button>
                     </HStack>
                   </Td>
                 </Tr>

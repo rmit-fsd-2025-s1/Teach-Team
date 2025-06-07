@@ -22,6 +22,19 @@ export const typeDefs = `
     course: Course!
   }
 
+  type Application {
+    id: ID!
+    name: String!
+    email: String!
+    selectedCourse: String!
+    role: String!
+    previousRoles: String!
+    availability: String!
+    skills: String!
+    academicCredentials: String!
+    isUnavailable: Boolean!
+  }
+
 
   # QUERIES
   type Query {
@@ -34,6 +47,8 @@ export const typeDefs = `
     adminCourseAssignments(courseCode: String!): [LecturerCourseAssignment!]!
 
     adminAllTutors: [User!]!
+
+    adminAllApplications: [Application!]!
 
     # Statistical reports
     chosenCandidates: [User!]!
@@ -75,5 +90,8 @@ export const typeDefs = `
 
     adminBlockTutor(tutorId: ID!): User!
     adminUnblockTutor(tutorId: ID!): User!
+
+    setApplicantUnavailable(applicationId: ID!): Application!
+    setApplicantAvailable(applicationId: ID!): Application!
   }
 `;

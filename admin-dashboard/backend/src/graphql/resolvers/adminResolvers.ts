@@ -2,6 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import { Course } from "../../entities/Course";
 import { LecturerCourse } from "../../entities/LecturerCourse";
+import { Application } from "../../entities/Application";
 
 export const adminResolvers = {
   Query: {
@@ -66,6 +67,11 @@ export const adminResolvers = {
         .where("user.selectionCount = :val", { val: 0 })
         .andWhere("user.isLecturer = :isLecturer", { isLecturer: false })
         .getMany();
+    },
+
+    adminAllApplications: async () => {
+      const appRepo = AppDataSource.getRepository(Application);
+      return appRepo.find();
     },
   },
 
@@ -245,6 +251,30 @@ export const adminResolvers = {
 
       user.isBlocked = false;
       return userRepo.save(user);
+    },
+
+    setApplicantUnavailable: async (_: any, { applicationId }: { applicationId: string }) => {
+      const appRepo = AppDataSource.getRepository(Application);
+      const application = await appRepo.findOne({ where: { id: applicationId } });
+      
+      if (!application) {
+        throw new Error("Application not found");
+      }
+
+      application.isUnavailable = true;
+      return appRepo.save(application);
+    },
+
+    setApplicantAvailable: async (_: any, { applicationId }: { applicationId: string }) => {
+      const appRepo = AppDataSource.getRepository(Application);
+      const application = await appRepo.findOne({ where: { id: applicationId } });
+      
+      if (!application) {
+        throw new Error("Application not found");
+      }
+
+      application.isUnavailable = false;
+      return appRepo.save(application);
     },
   },
 };

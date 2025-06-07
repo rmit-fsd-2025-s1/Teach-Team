@@ -44,6 +44,9 @@ export class Application {
   @Column({ default: false })
   isSelected: boolean;
 
+  @Column({ default: false })
+  isUnavailable: boolean;
+
   @Column({ type: "text", nullable: true })
   comments?: string;
 

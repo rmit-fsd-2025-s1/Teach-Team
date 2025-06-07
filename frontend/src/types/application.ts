@@ -15,6 +15,7 @@ export interface Course {
     academicCredentials: string;
     dateApplied: string;
     isSelected: boolean;
+    isUnavailable: boolean;
     comments?: string;
     rank?: string | number;
   }
@@ -32,6 +33,7 @@ export interface Course {
     comments?: string;
     rank?: string | number;
     isSelected?: boolean;
+    isUnavailable: boolean;
     selectedCourseEntity?: {
     courseCode: string;
     courseName: string;

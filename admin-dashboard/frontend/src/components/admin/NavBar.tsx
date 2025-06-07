@@ -26,6 +26,9 @@ export default function NavBar() {
         <Link fontSize="lg" onClick={() => router.push("/StatisticalReports")}>
           Statistical Reports
         </Link>
+        <Link fontSize="lg" onClick={() => router.push("/applicantUnavailability")}>
+          Applicant Unavailability
+        </Link>
       </VStack>
     </Box>
   );

@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   // synchronize: true will automatically create database tables based on entity definitions
   // and update them when entity definitions change. This is useful during development
   // but should be disabled in production to prevent accidental data loss.
-  synchronize: true,
+  synchronize: false,
   logging: true,
   entities: [ User, Application, Admins, CourseLecturer, Courses, CourseTutor ],
   migrations: [],

@@ -144,3 +144,7 @@ password: LecturerPassword1*
 email: admin
 password: admin
 ```
+
+# REFERENCES
+1. GraphQL Queries, https://graphql.org/learn/queries/ (accessed: 1/06/2025)
+2. GenAI, ChatGPT, used to understand GraphQL queries and mutations.

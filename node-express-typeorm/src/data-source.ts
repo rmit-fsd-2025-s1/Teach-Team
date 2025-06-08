@@ -6,6 +6,7 @@ import { Admins } from "./entity/Admins";
 import { CourseLecturer } from "./entity/CourseLectutrers";
 import { Courses } from "./entity/Courses";
 import { CourseTutor } from "./entity/CourseTutors";
+
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: "209.38.26.237",

@@ -181,10 +181,62 @@ export default function LecturerPage() {
 
   const handleSelect = async (application: Application) => {
     const user = getUserByEmail(application.email)
-    if(!user) return;
+    if(!user) {
+      console.error('User not found for email:', application.email);
+      toast({
+        title: "Error",
+        description: "User not found",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+      return;
+    }
+
+    if (!user.id) {
+      console.error('User ID is missing:', user);
+      toast({
+        title: "Error",
+        description: "User ID is missing",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+      return;
+    }
+
+    if (!application.selectedCourseEntity?.courseCode) {
+      console.error('Course code is missing:', application);
+      toast({
+        title: "Error",
+        description: "Course code is missing",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+      return;
+    }
+
+    console.log('Selected application:', application);
+    console.log('Found user:', user);
 
     try {
+      const requestData = {
+        userId: user.id,
+        courseCode: application.selectedCourseEntity.courseCode
+      };
+
+      console.log('Request data:', requestData);
+
       if(!application.isSelected) {
+        // Add course tutor
+        await axios.post('/api/course-tutor', requestData, { 
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
         await updateUser(application.email, {selectionCount: user.selectionCount + 1})
         await updateApplication(application.id, {isSelected: true})
         toast({
@@ -194,6 +246,15 @@ export default function LecturerPage() {
           isClosable: true
         })
       } else {
+        // Remove course tutor
+        await axios.delete('/api/course-tutor', {
+          data: requestData,
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
         await updateUser(application.email, {selectionCount: user.selectionCount - 1})
         await updateApplication(application.id, {isSelected: false})
         toast({
@@ -205,9 +266,15 @@ export default function LecturerPage() {
       }
 
       await fetchApplications()
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error in handleSelect:', error);
+      console.error('Request data:', {
+        userId: user.id,
+        courseCode: application.selectedCourseEntity?.courseCode
+      });
       toast({
         title: "Error updating application",
+        description: error.response?.data?.message || "An error occurred",
         status: "error",
         duration: 5000,
         isClosable: true

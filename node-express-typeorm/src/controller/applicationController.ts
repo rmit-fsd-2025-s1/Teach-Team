@@ -97,15 +97,31 @@ export const getLecturerApplications = async (req: Request, res: Response) => {
 
   if (search && typeof search === "string") {
     const q = `%${search.toLowerCase()}%`;
-    qb.andWhere(
-      `LOWER(app.name) LIKE :q
-        OR LOWER(app.email) LIKE :q
-        OR LOWER(app.skills) LIKE :q
-        OR LOWER(app.availability) LIKE :q
-        OR LOWER(app.role) LIKE :q
-        OR LOWER(courses.courseName) LIKE :q`,
-      { q }
-    );
+    switch (sortBy) {
+      case "name":
+        qb.andWhere(`LOWER(app.name) LIKE :q`, { q });
+        break;
+      case "skills":
+        qb.andWhere(`LOWER(app.skills) LIKE :q`, { q });
+        break;
+      case "availability":
+        qb.andWhere(`LOWER(app.availability) LIKE :q`, { q });
+        break;
+      case "selectedCourse": // This maps to course name in the join
+        qb.andWhere(`LOWER(courses.courseName) LIKE :q`, { q });
+        break;
+      default: // Fallback to broad search if no specific sortBy is provided or recognized
+        qb.andWhere(
+          `LOWER(app.name) LIKE :q
+           OR LOWER(app.email) LIKE :q
+           OR LOWER(app.skills) LIKE :q
+           OR LOWER(app.availability) LIKE :q
+           OR LOWER(app.role) LIKE :q
+           OR LOWER(courses.courseName) LIKE :q`,
+          { q }
+        );
+        break;
+    }
   }
 
   const sortDirection = order === "DESC" ? "DESC" : "ASC";

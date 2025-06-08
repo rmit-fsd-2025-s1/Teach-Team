@@ -78,6 +78,9 @@ export function ApplicationTable({
                 <Box ml={2}>{getSortIcon("course")}</Box>
               </Flex>
             </Th>
+            <Th color={"white"}>
+              Semester
+            </Th>
             <Th color="white">Role</Th>
             <Th
               color="white"
@@ -135,6 +138,7 @@ export function ApplicationTable({
                 </Td>
                 <Td color="white">{application.email}</Td>
                 <Td color="white">{courseDisplay}</Td>
+                <Td color="white">{application.selectedCourseEntity?.semester || "N/A"}</Td>
                 <Td color="white">{application.role}</Td>
                 <Td color="white">
                   <HStack>

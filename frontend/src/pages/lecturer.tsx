@@ -94,7 +94,7 @@ export default function LecturerPage() {
         isClosable: true,
       });
     }
-  }, [user]);
+  }, []);
 
   const fetchApplications = async () => {
     try {
@@ -265,8 +265,8 @@ export default function LecturerPage() {
           bg="gray.700"
           p={8}
           borderRadius="md"
-          width="90%"
-          maxWidth="1200px"
+          width="100%"
+          maxWidth="1350px"
         >
           <Flex justifyContent="space-between" alignItems="center" mb={6}>
             <Text fontSize="2xl" fontWeight="bold" color="teal.300">

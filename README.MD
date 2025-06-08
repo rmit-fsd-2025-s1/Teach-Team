@@ -132,6 +132,9 @@ password: TutorPassword1*
 ----
 email: tutor2@rmit.edu.au
 password: TutorPassword2*
+----
+email: tutor3@rmit.edu.au
+password: TutorPassword3*
 
 # Lecturer Logins
 email: lecturer@rmit.edu.au
@@ -141,3 +144,7 @@ password: LecturerPassword1*
 email: admin
 password: admin
 ```
+
+# REFERENCES
+1. GraphQL Queries, https://graphql.org/learn/queries/ (accessed: 1/06/2025)
+2. GenAI, ChatGPT, used to understand GraphQL queries and mutations.

@@ -132,6 +132,9 @@ password: TutorPassword1*
 ----
 email: tutor2@rmit.edu.au
 password: TutorPassword2*
+----
+email: tutor3@rmit.edu.au
+password: TutorPassword3*
 
 # Lecturer Logins
 email: lecturer@rmit.edu.au

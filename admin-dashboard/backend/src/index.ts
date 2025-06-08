@@ -1,3 +1,4 @@
+//this was made to serve as the main entry point that initalizes express, apollo server and databse connection
 import "reflect-metadata";
 import express from "express";
 import { AppDataSource } from "./data-source";

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, TEST_USERS } from '../types/User';
+import { User} from '../types/User';
 import axios from 'axios';
 
 

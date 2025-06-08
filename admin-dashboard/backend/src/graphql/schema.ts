@@ -35,6 +35,12 @@ export const typeDefs = `
     isUnavailable: Boolean!
   }
 
+  type Admin {
+  id: ID!
+  email: String!
+  password: String!
+  }
+
 
   # QUERIES
   type Query {
@@ -58,6 +64,10 @@ export const typeDefs = `
 
 
   # MUTATIONS
+
+  type Mutation {
+  loginAdmin(email: String!, password: String!): Boolean!
+  }
 
   type Mutation {
     adminAssignLecturerCourse(

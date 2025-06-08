@@ -114,3 +114,30 @@ Admins are able to block and unblock logins for tutor accounts.
 They can also generate three reports; A list of all chosen candidates, A candidate who has been chosen for more than three courses, and any remaining candidates who have not been chosen for any courses.
 
 Admins are also able to mark certain applicants as unavailable, marking their application as "unavailable" to lecturers. 
+
+# NOTE
+
+## Database Login
+Database login details for TeachTeam and Admin Dashboard (data source files already filled):
+```
+username: S4091503
+password: S4091503
+database: S4091503
+```
+The following database has some prefilled data including tutor and lecturer logins, applications, courses and an admin login. Additional lecturer and tutor accounts can be made via the signup page.
+```bash
+# Tutor Logins
+email: tutor@rmit.edu.au
+password: TutorPassword1*
+----
+email: tutor2@rmit.edu.au
+password: TutorPassword2*
+
+# Lecturer Logins
+email: lecturer@rmit.edu.au
+password: LecturerPassword1*
+
+# Admin Login (admin dashboard)
+email: admin
+password: admin
+```

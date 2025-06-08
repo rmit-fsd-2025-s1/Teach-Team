@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
 import {
   Flex,
   Box,
@@ -12,31 +13,44 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
+const LOGIN_ADMIN = gql`
+  mutation LoginAdmin($email: String!, $password: String!) {
+    loginAdmin(email: $email, password: $password)
+  }
+`;
+
 export default function LoginPage() {
   const router = useRouter();
   const toast = useToast();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
 
-    if (username.trim() == "admin" && password.trim() == "admin") {
+  const [login, { loading }] = useMutation(LOGIN_ADMIN, {
+    onCompleted: (data) => {
       toast({
         title: "Successfully logged in",
         status: "success",
         duration: 3000,
         isClosable: true,
       });
-      router.push("/courses");
-    } else {
+      router.push('/courses');
+    },
+    onError: (error) => {
       toast({
-        title: "Invalid username or password",
+        title: "Error logging in",
+        description: error.message,
         status: "error",
         duration: 3000,
         isClosable: true,
       });
-    }
+    },
+  });
+
+
+ const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login({ variables: { email, password } });
   };
 
   return (
@@ -65,12 +79,12 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
             <FormControl id="username" isRequired>
-              <FormLabel color="white">Username</FormLabel>
+              <FormLabel color="white">Email</FormLabel>
               <Input
                 type="text"
-                value={username}
+                value={email}
                 placeholder="Enter username"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 bg="gray.700"
                 color="white"
                 _placeholder={{ color: "gray.400" }}

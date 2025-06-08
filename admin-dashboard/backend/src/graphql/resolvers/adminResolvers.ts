@@ -3,6 +3,7 @@ import { User } from "../../entities/User";
 import { Course } from "../../entities/Course";
 import { LecturerCourse } from "../../entities/LecturerCourse";
 import { Application } from "../../entities/Application";
+import {Admin} from "../../entities/Admins";
 
 export const adminResolvers = {
   Query: {
@@ -76,6 +77,17 @@ export const adminResolvers = {
   },
 
   Mutation: {
+
+    loginAdmin: async (_: any, { email, password }: { email: string; password: string }) => {
+      const repo = AppDataSource.getRepository(Admin);
+      const admin = await repo.findOne({ where: { email, password } });
+      if (!admin) {
+        throw new Error("Invalid credentials");
+      }
+      return true;
+    },
+    
+
     adminAssignLecturerCourse: async (
       _: any,
       args: { lecturerId: number; courseCode: string }

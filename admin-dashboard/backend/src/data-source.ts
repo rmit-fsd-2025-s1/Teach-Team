@@ -4,6 +4,7 @@ import { User } from "./entities/User";
 import { LecturerCourse } from "./entities/LecturerCourse";
 import { Course } from "./entities/Course";
 import { Application } from "./entities/Application";
+import { Admin } from "./entities/Admins";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -18,7 +19,7 @@ export const AppDataSource = new DataSource({
   // but should be disabled in production to prevent accidental data loss.
   synchronize: false,
   logging: true,
-  entities: [User, LecturerCourse, Course, Application],
+  entities: [User, LecturerCourse, Course, Application, Admin],
   migrations: [],
   subscribers: [],
 });

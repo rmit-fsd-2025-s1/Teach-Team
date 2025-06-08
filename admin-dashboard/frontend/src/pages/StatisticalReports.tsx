@@ -76,7 +76,7 @@ export default function StatisticalReports() {
                 {chosenLoading && <Center><Spinner /></Center>}
                 {chosenError && <Alert status="error"><AlertIcon />{chosenError.message}</Alert>}
                 {chosenData && (
-                  <Table variant="simple" size="sm" color="white" bg="gray.700" borderRadius="md">
+                  <Table variant="simple" color="white" bg="gray.700" borderRadius="md">
                     <Thead>
                       <Tr>
                         <Th color="white">Name</Th>
@@ -109,7 +109,7 @@ export default function StatisticalReports() {
                 {popularLoading && <Center><Spinner /></Center>}
                 {popularError && <Alert status="error"><AlertIcon />{popularError.message}</Alert>}
                 {popularData && (
-                  <Table variant="simple" size="sm" color="white" bg="gray.700" borderRadius="md">
+                  <Table variant="simple" color="white" bg="gray.700" borderRadius="md">
                     <Thead>
                       <Tr>
                         <Th color="white">Name</Th>
@@ -142,7 +142,7 @@ export default function StatisticalReports() {
                 {yetLoading && <Center><Spinner /></Center>}
                 {yetError && <Alert status="error"><AlertIcon />{yetError.message}</Alert>}
                 {yetData && (
-                  <Table variant="simple" size="sm" color="white" bg="gray.700" borderRadius="md">
+                  <Table variant="simple" color="white" bg="gray.700" borderRadius="md">
                     <Thead>
                       <Tr>
                         <Th color="white">Name</Th>

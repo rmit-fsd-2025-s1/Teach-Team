@@ -44,6 +44,7 @@ function TutorApplicationForm() {
     academicCredentials: "",
     dateApplied: "",
     isSelected: false,
+    isUnavailable: false,
   });
 
   // Update form data when user changes

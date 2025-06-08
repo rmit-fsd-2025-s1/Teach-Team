@@ -41,7 +41,7 @@ export default function Header() {
               <MenuButton
                 as={Button}
                 colorScheme={"teal"}
-                bg={"teal.300"}
+                bg={"teal.500"}
                 rightIcon={<ChevronDownIcon />}
               >
                 Welcome {user.name}

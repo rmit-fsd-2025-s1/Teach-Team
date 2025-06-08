@@ -22,16 +22,31 @@ export const createApplication = async (req: Request, res: Response) => {
         rank,
       } = req.body;
 
+      
+
       const courseRepo = AppDataSource.getRepository(Courses)
       const userRepo = AppDataSource.getRepository(User);
       const appRepo = AppDataSource.getRepository(Application);
 
-      const course = await courseRepo.findOneBy({courseCode})
+      const course = await courseRepo.findOneBy({courseCode});
       if(!course) return res.status(404).json({message: "Course not found"})
   
       const user = await userRepo.findOne({ where: { id: userId }, relations: ["applications"] });
-      if (!user) return res.status(404).json({ message: "User not found" });
-  
+      if (!user) return res.status(404).json({ message: "User not found" })
+
+        const dup = await appRepo
+      .createQueryBuilder("app")
+      .where("app.name = :name", { name: user.name })
+      .andWhere("app.email = :email", { email: user.email })
+      .andWhere("app.selectedCourse = :cc", { cc: courseCode })
+      .andWhere("app.role = :role", { role })
+      .getOne();
+    if (dup) {
+      return res
+        .status(400)
+        .json({ message: "Application already exists for this course & role" });
+    }
+
       const application = appRepo.create({
         name: user.name,
         email: user.email,

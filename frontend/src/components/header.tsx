@@ -52,14 +52,10 @@ export default function Header() {
                   justifyContent="center"
                   fontWeight={"bold"}
                   gap={2}
+                  onClick={onOpen}
+                  icon={<InfoIcon color={"black"} boxSize={"25px"} />}
                 >
-                  <Button
-                    leftIcon={<InfoIcon color={"black"} boxSize={"25px"} />}
-                    width={"150px"}
-                    onClick={onOpen}
-                  >
-                    Profile
-                  </Button>
+                  Profile
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
@@ -67,24 +63,18 @@ export default function Header() {
                   color="red"
                   justifyContent="center"
                   fontWeight={"bold"}
+                  onClick={logout}
+                  icon={
+                    <img
+                      src="./logout.svg"
+                      style={{
+                        filter:
+                          "invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%)",
+                      }}
+                    />
+                  }
                 >
-                  <Button
-                    onClick={logout}
-                    leftIcon={
-                      <img
-                        src="./logout.svg"
-                        style={{
-                          filter:
-                            "invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%)",
-                        }}
-                      />
-                    }
-                    colorScheme="red"
-                    color={"black"}
-                    width={"150px"}
-                  >
-                    Logout
-                  </Button>
+                  Logout
                 </MenuItem>
               </MenuList>
             </Menu>

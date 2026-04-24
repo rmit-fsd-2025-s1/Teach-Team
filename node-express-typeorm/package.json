@@ -6,7 +6,8 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typeorm": "typeorm-ts-node-commonjs -d src/data-source.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,15 +19,17 @@
     "@types/node": "^20.11.24",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
     "express": "^4.18.3",
-    "mysql2": "^3.14.0",
     "nodemon": "^3.1.0",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.1",
     "ts-node": "^10.9.2",
-    "typeorm": "^0.3.20",
+    "typeorm": "^0.3.28",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2"
+    "@types/bcrypt": "^5.0.2",
+    "typeorm-ts-node-commonjs": "^0.3.20"
   }
 }

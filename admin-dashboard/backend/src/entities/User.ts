@@ -6,7 +6,7 @@ import {
 } from "typeorm";
 import { LecturerCourse } from "./LecturerCourse";
 
-@Entity({ name: "user" })
+@Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -20,10 +20,10 @@ export class User {
   @Column({ name: "password", type: "varchar", length: 255 })
   password!: string;
 
-  @Column({ name: "isLecturer", type: "tinyint", width: 1, default: 0 })
+  @Column({ name: "isLecturer", type: "boolean", default: false })
   isLecturer!: boolean;
 
-  @Column({ name: "isBlocked", type: "tinyint", width: 1, default: 0 })
+  @Column({ name: "isBlocked", type: "boolean", default: false })
   isBlocked!: boolean;
 
   @Column({ name: "selectionCount", type: "int", default: 0 })

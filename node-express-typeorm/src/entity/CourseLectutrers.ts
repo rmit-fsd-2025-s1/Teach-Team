@@ -8,7 +8,7 @@ export class CourseLecturer {
   id!: number;
 
   @Column({name: "lecturer_id", type: "int"})
-  lecturer_id!: string;
+  lecturer_id!: number;
 
   @Column({name: "courseCode", type: "varchar"})
   courseCode: string;

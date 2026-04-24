@@ -7,8 +7,8 @@ export class CourseTutor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  userId: string;
+  @Column({ type: "int" })
+  userId: number;
 
   @Column()
   courseCode: string;

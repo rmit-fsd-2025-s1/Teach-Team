@@ -1,10 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, JoinTable} from 'typeorm'
 import { Application } from './Application'
 
-@Entity()
+@Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn()
-    id: string
+    id: number
 
     @Column()
     name: string
@@ -21,7 +21,7 @@ export class User {
     @Column({type: "boolean", default: false})
     isBlocked: boolean
 
-    @Column()
+    @Column({ type: "int", default: 0 })
     selectionCount: number
 
     @CreateDateColumn()

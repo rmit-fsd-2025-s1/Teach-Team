@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { gql, useMutation } from "@apollo/client";
 import {
   Flex,
@@ -84,7 +84,9 @@ export default function LoginPage() {
                 type="text"
                 value={email}
                 placeholder="Enter username"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
                 bg="gray.700"
                 color="white"
                 _placeholder={{ color: "gray.400" }}
@@ -97,7 +99,9 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 placeholder="Enter password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
                 bg="gray.700"
                 color="white"
                 _placeholder={{ color: "gray.400" }}

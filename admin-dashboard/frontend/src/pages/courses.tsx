@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   Box,
@@ -326,7 +326,9 @@ export default function CoursesPage() {
                       type="text"
                       value={newCourseCode}
                       placeholder="e.g. COSC2302"
-                      onChange={(e) => setNewCourseCode(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setNewCourseCode(e.target.value)
+                      }
                       bg="gray.700"
                       color="white"
                       _placeholder={{ color: "gray.400" }}
@@ -338,7 +340,9 @@ export default function CoursesPage() {
                       type="text"
                       value={newCourseName}
                       placeholder="e.g. Full Stack Development"
-                      onChange={(e) => setNewCourseName(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setNewCourseName(e.target.value)
+                      }
                       bg="gray.700"
                       color="white"
                       _placeholder={{ color: "gray.400" }}
@@ -350,7 +354,9 @@ export default function CoursesPage() {
                       type="text"
                       value={newSemester}
                       placeholder="e.g. 2025S1"
-                      onChange={(e) => setNewSemester(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setNewSemester(e.target.value)
+                      }
                       bg="gray.700"
                       color="white"
                       _placeholder={{ color: "gray.400" }}
@@ -394,7 +400,9 @@ export default function CoursesPage() {
                     <Input
                       type="text"
                       value={editCourseName}
-                      onChange={(e) => setEditCourseName(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setEditCourseName(e.target.value)
+                      }
                       bg="gray.700"
                       color="white"
                       _placeholder={{ color: "gray.400" }}
@@ -405,7 +413,9 @@ export default function CoursesPage() {
                     <Input
                       type="text"
                       value={editSemester}
-                      onChange={(e) => setEditSemester(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setEditSemester(e.target.value)
+                      }
                       bg="gray.700"
                       color="white"
                       _placeholder={{ color: "gray.400" }}

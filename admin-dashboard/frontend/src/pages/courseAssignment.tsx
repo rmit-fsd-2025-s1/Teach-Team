@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import {
   Box,
@@ -377,7 +377,9 @@ export default function AssignmentsPage() {
                     <Select
                       placeholder="Choose a course..."
                       value={assignCourseCode}
-                      onChange={(e) => setAssignCourseCode(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                        setAssignCourseCode(e.target.value)
+                      }
                       bg="gray.700"
                       color="black"
                     >

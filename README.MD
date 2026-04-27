@@ -1,12 +1,12 @@
 # TeamTeam & Admin Dashboard
-##LOGIN
-###ADMIN
+## LOGIN
+### ADMIN
 ```bash 
 username: admin
 password: admin
 ```
 
-###LECTURER
+### LECTURER
 You could create your own account using sign up or use the following information
 ```bash
 username: umar@gmail.com
@@ -16,7 +16,7 @@ username: hanin@gmail.com
 password: MANUNITEd7!
 ```
 
-###TUTOR
+### TUTOR
 You could create your own account using sign up or use the following information
 
 | Email | Password |

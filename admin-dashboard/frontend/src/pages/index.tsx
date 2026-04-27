@@ -10,6 +10,8 @@ import {
   VStack,
   Heading,
   useToast,
+  Text,
+  Link,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
@@ -106,6 +108,18 @@ export default function LoginPage() {
                 color="white"
                 _placeholder={{ color: "gray.400" }}
               />
+              <Text pt={2} fontSize="sm" color="gray.300">
+                Please visit the{" "}
+                <Link
+                  fontWeight="semibold"
+                  href="https://github.com/um4rzzz/Teach-Team"
+                  color="teal.300"
+                  isExternal
+                >
+                  GitHub Repo
+                </Link>{" "}
+                for login information.
+              </Text>
             </FormControl>
 
             <Button type="submit" colorScheme="teal" w="full">

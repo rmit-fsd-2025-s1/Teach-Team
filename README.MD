@@ -1,4 +1,18 @@
 # TeamTeam & Admin Dashboard
+##LOGIN
+###ADMIN
+```bash 
+username: admin
+password: admin
+```
+
+###LECTURER
+```bash
+username: umar@gmail.com
+password: MANUNITEd7!
+
+username: hanin@gmail.com
+password: MANUNITEd7!
 
 This repository contains two related applications:
 

@@ -83,8 +83,20 @@ export default function Login() {
                 required
               />
               <Text pt={4} color={"white"}>
-                Don't have an account?
-                <Link fontWeight={"bold"} href="/signup" color={"teal.300"}> Create one</Link>
+                Don't have an account?{" "}
+                <Link fontWeight={"bold"} href="/signup" color={"teal.300"}>
+                  Create one
+                </Link>{" "}
+                or visit the{" "}
+                <Link
+                  fontWeight={"bold"}
+                  href="https://github.com/um4rzzz/Teach-Team"
+                  color={"teal.300"}
+                  isExternal
+                >
+                  GitHub Repo
+                </Link>{" "}
+                for login data.
               </Text>
             </FormControl>
 

@@ -7,12 +7,30 @@ password: admin
 ```
 
 ###LECTURER
+You could create your own account using sign up or use the following information
 ```bash
 username: umar@gmail.com
 password: MANUNITEd7!
 
 username: hanin@gmail.com
 password: MANUNITEd7!
+```
+
+###TUTOR
+You could create your own account using sign up or use the following information
+
+| Email | Password |
+| --- | --- |
+| faiza@gmail.com | Faiza10309! |
+| daniah@gmail.com | Daniah123@ |
+| zayna@gmail.com | Zayna29# |
+| mohammed@gmail.com | Moh@5432 |
+| aliya@gmail.com | Aliya9876$ |
+| amna@gmail.com | Amna3108! |
+| haadi@gmail.com | Haadi00# |
+| zahid@gmail.com | Zahidd12& |
+| syed@gmail.com | Syedd67@ |
+| aanchal@gmail.com | Aanchal33% |
 
 This repository contains two related applications:
 

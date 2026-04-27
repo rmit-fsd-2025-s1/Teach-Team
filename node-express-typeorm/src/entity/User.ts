@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToMany, JoinTable} from 'typeorm'
 import { Application } from './Application'
 
-@Entity({ name: "users" })
+@Entity({ schema: "app", name: "users" })
 export class User {
     @PrimaryGeneratedColumn()
     id: number

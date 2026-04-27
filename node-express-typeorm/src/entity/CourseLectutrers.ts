@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "t
 import { User } from "./User";
 import { Courses} from "./Courses";
 
-@Entity({name: "lecturer_course"})
+@Entity({ schema: "app", name: "lecturer_course" })
 export class CourseLecturer {
   @PrimaryGeneratedColumn()
   id!: number;

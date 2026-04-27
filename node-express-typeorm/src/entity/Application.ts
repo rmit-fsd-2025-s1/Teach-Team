@@ -5,7 +5,7 @@ import { Courses } from './Courses';
 
 export type Availability = "part-time" | "full-time";
 
-@Entity()
+@Entity({ schema: "app", name: "application" })
 export class Application {
   @PrimaryGeneratedColumn("uuid")
   id: string;

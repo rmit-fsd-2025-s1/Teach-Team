@@ -8,7 +8,7 @@ import {
 import { User } from "./User";
 import { Course } from "./Course";
 
-@Entity("lecturer_course")
+@Entity({ schema: "app", name: "lecturer_course" })
 export class LecturerCourse {
   @PrimaryGeneratedColumn()
   id: number;              

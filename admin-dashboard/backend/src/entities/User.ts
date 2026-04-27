@@ -6,7 +6,7 @@ import {
 } from "typeorm";
 import { LecturerCourse } from "./LecturerCourse";
 
-@Entity({ name: "users" })
+@Entity({ schema: "app", name: "users" })
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
